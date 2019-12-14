@@ -4,6 +4,7 @@
 from splinter import Browser
 from bs4 import BeautifulSoup
 import pandas as pd
+import datetime as dt
 
 #Add function to:
 #1- Initialize the browser.
@@ -28,6 +29,8 @@ def scrape_all():
       "facts": mars_facts(),
       "last_modified": dt.datetime.now()
     }
+    # Turn off automated browsing session
+    browser.quit()
     return data
 
 
@@ -101,19 +104,16 @@ def featured_image(browser):
 def mars_facts():
     # Add try/except for error handling
     try:
-    # Instead of scraping each row, or the data in each <td />, we’re going to scrape the entire table with Pandas’ .read_html() function
-    df = pd.read_html('http://space-facts.com/mars/')[0]
+        # Instead of scraping each row, or the data in each <td />, we’re going to scrape the entire table with Pandas’ .read_html() function
+        df = pd.read_html('http://space-facts.com/mars/')[0]
     except BaseException:
-        return: None
+        return None
     # Assign columns and set index of dataframe    
     df.columns=['description', 'value']
     df.set_index('description', inplace=True)
 
     # Convert our DataFrame back into HTML-ready code using the .to_html() function
     return df.to_html()
-
-# End the automated browsing session.
-browser.quit()
 
 #  Tell Flask that our script is complete and ready for action
 if __name__ == "__main__":
