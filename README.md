@@ -20,4 +20,4 @@ The goals for this challenge are to:
 ## App Preview
 
 Here is a preview of what the web app looks like once the data has been scraped and rendered:
-![alt text]()
+![alt text](https://github.com/jbtrahin/Mission-to-Mars/blob/master/wep_app_snapshot.png)
