@@ -27,6 +27,7 @@ def scrape_all():
       "news_paragraph": news_paragraph,
       "featured_image": featured_image(browser),
       "facts": mars_facts(),
+      "hemisphere_images": mars_hemispheres(browser),
       "last_modified": dt.datetime.now()
     }
     # Turn off automated browsing session
@@ -114,6 +115,40 @@ def mars_facts():
 
     # Convert our DataFrame back into HTML-ready code using the .to_html() function
     return df.to_html()
+
+
+### Mars Hemispheres
+
+# Define mars_hemispheres function:
+def mars_hemispheres(browser):
+    # Visit URL
+    url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    browser.visit(url)
+
+    # Define empty list
+    hemispheres = []
+
+    # Access all hemisphere links
+    for x in range(0,4):
+        #click link
+        itemLink = browser.find_by_css('.description .itemLink', wait_time=3)[x]
+        itemLink.click()
+        soup = BeautifulSoup(browser.html)
+        #hemisphere url
+        hemisphere_url = soup.find('img', class_='wide-image')['src']   
+        hemisphere_url_full = f'https://astrogeology.usgs.gov{hemisphere_url}'
+        #hemisphere title
+        hemisphere_title = (soup.find('h2', class_='title')).text
+        #store in list
+        hemispheres.append({
+            "img_url": hemisphere_url_full,
+            "title": hemisphere_title
+        })
+        #go back in browser
+        browser.back()
+    
+    return hemispheres
+
 
 #  Tell Flask that our script is complete and ready for action
 if __name__ == "__main__":
